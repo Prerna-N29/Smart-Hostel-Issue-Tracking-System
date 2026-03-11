@@ -12,7 +12,8 @@ router.post("/", verifyToken, async (req, res) => {
 
     const newIssue = new Issue({
       room,
-      problem
+      problem,
+      reportedBy: req.user.id
     });
 
     const savedIssue = await newIssue.save();
@@ -29,7 +30,23 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/", verifyToken, async (req, res) => {
   try {
 
-    const issues = await Issue.find();
+    const issues = await Issue.find().populate("reportedBy", "name email");
+
+    res.json(issues);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// GET MY ISSUES
+router.get("/my", verifyToken, async (req, res) => {
+  try {
+
+    const issues = await Issue.find({
+      reportedBy: req.user.id
+    }).populate("reportedBy", "name email");
 
     res.json(issues);
 
@@ -43,7 +60,7 @@ router.get("/", verifyToken, async (req, res) => {
 router.get("/:id", verifyToken, async (req, res) => {
   try {
 
-    const issue = await Issue.findById(req.params.id);
+    const issue = await Issue.findById(req.params.id).populate("reportedBy", "name email");
 
     if (!issue) {
       return res.status(404).json({ message: "Issue not found" });
@@ -97,5 +114,6 @@ router.delete("/:id", verifyToken, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 module.exports = router;
