@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const Issue = require("../models/Issue");
+const verifyToken = require("../middleware/authMiddleware");
 
 
 // CREATE ISSUE
-// POST /issues
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   try {
 
     const { room, problem } = req.body;
@@ -26,11 +26,10 @@ router.post("/", async (req, res) => {
 
 
 // GET ALL ISSUES
-// GET /issues
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
 
-    const issues = await Issue.find().sort({ createdAt: -1 });
+    const issues = await Issue.find();
 
     res.json(issues);
 
@@ -41,8 +40,7 @@ router.get("/", async (req, res) => {
 
 
 // GET ISSUE BY ID
-// GET /issues/:id
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
 
     const issue = await Issue.findById(req.params.id);
@@ -60,8 +58,7 @@ router.get("/:id", async (req, res) => {
 
 
 // UPDATE ISSUE STATUS
-// PUT /issues/:id
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
 
     const { status } = req.body;
@@ -85,8 +82,7 @@ router.put("/:id", async (req, res) => {
 
 
 // DELETE ISSUE
-// DELETE /issues/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
 
     const deletedIssue = await Issue.findByIdAndDelete(req.params.id);
@@ -101,23 +97,5 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-
-// FILTER ISSUES BY STATUS
-// GET /issues/status/Pending
-router.get("/status/:status", async (req, res) => {
-  try {
-
-    const issues = await Issue.find({
-      status: req.params.status
-    });
-
-    res.json(issues);
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const IssueSchema = new mongoose.Schema({
+const issueSchema = new mongoose.Schema({
   room: {
     type: String,
     required: true
@@ -19,4 +19,4 @@ const IssueSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Issue", IssueSchema);
+module.exports = mongoose.model("Issue", issueSchema);

@@ -3,24 +3,27 @@ const connectDB = require("./config/db");
 
 const app = express();
 
-// connect to MongoDB
+// Connect database
 connectDB();
 
-// middleware to read JSON
+// Middleware
 app.use(express.json());
 
-// import routes
+// Routes
 const issueRoutes = require("./routes/issues");
+const authRoutes = require("./routes/auth");
 
-// mount routes
 app.use("/issues", issueRoutes);
+app.use("/auth", authRoutes);
 
-// optional root route
+// Root route
 app.get("/", (req, res) => {
   res.send("Smart Hostel Issue Tracking API Running 🚀");
 });
 
-// start server
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+// Start server
+const PORT = 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
