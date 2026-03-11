@@ -1,19 +1,22 @@
-import { useEffect } from "react";
-import api from "./services/api";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import CreateIssue from "./pages/CreateIssue";
 
 function App() {
-
-  useEffect(() => {
-    api.get("/")
-      .then(res => console.log(res.data))
-      .catch(err => console.log(err));
-  }, []);
-
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Smart Hostel System</h1>
-      <p>Check your browser console 👀</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/create" element={<CreateIssue />} />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
